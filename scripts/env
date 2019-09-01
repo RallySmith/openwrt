@@ -187,14 +187,15 @@ env_new() {
 	branch="$(git branch | grep '^\* ' | awk '{print $2}')"
 	if [ -n "$branch" -a "$branch" != "master" ]; then
 		env_ask_sync
-		if ask_bool 0 "Do you want to clone the current environment?"; then
-			from="$branch"
-		fi
+#		if ask_bool 0 "Do you want to clone the current environment?"; then
+#			from="$branch"
+#		fi
 		rm -f "$BASEDIR/.config" "$BASEDIR/files"
 	fi
 	git checkout -b "$1" "$from"
 	if [ -f "$BASEDIR/.config" -o -d "$BASEDIR/files" ]; then
-		if ask_bool 1 "Do you want to start your configuration repository with the current configuration?"; then
+#		if ask_bool 1 "Do you want to start your configuration repository with the current configuration?"; then
+		if true; then
 			[ -d "$BASEDIR/files" -a \! -L "$BASEDIR/files" ] && {
 				mkdir -p "$ENVDIR/files"
 				shopt -s dotglob
