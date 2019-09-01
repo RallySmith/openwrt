@@ -1,0 +1,26 @@
+Source-Makefile: feeds/packages/net/cifsd-tools/Makefile
+Build-Depends: !BUILD_NLS:libiconv !BUILD_NLS:gettext
+
+Package: cifsd-tools
+Submenu: Filesystem
+Version: 2019-08-19-bbeab27f0a1695f711fb84d9cd29a83f818ef90e-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +kmod-fs-cifsd +glib2 +libnl-core +libnl-genl
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: net
+Category: Network
+Repository: base
+Title: Kernel CIFS/SMB server support and userspace tools
+Maintainer: Andy Walsh <andy.walsh44+github@gmail.com>
+Source: cifsd-tools-2019-08-19-bbeab27f0a1695f711fb84d9cd29a83f818ef90e.tar.xz
+License: GPL-2.0-or-later
+LicenseFiles: COPYING
+Type: ipkg
+Description:   Userspace tools (cifsd, cifsadmin) for the CIFS/SMB kernel fileserver.
+  The config file location is /etc/cifs/smb.conf
+https://github.com/cifsd-team/cifsd-tools
+Andy Walsh <andy.walsh44+github@gmail.com>
+@@
+
+

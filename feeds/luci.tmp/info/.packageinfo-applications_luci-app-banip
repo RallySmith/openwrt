@@ -1,0 +1,41 @@
+Source-Makefile: feeds/luci/applications/luci-app-banip/Makefile
+Build-Depends: lua/host luci-base/host LUCI_CSSTIDY:csstidy/host 
+
+Package: luci-app-banip
+Submenu: 3. Applications
+Version: x-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +banip +luci-lib-jsonc
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: LuCI support for banIP
+Maintainer: 
+Source: 
+Type: ipkg
+Description: LuCI support for banIP
+
+@@
+
+Package: luci-i18n-banip-es
+Default: LUCI_LANG_es||(ALL&&m)
+Version: x-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread luci-app-banip
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-banip - es translation
+Maintainer: 
+Source: 
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-banip - Español (Spanish)
+
+@@
+
+

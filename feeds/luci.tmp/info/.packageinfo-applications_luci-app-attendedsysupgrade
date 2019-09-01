@@ -1,0 +1,41 @@
+Source-Makefile: feeds/luci/applications/luci-app-attendedsysupgrade/Makefile
+Build-Depends: lua/host luci-base/host LUCI_CSSTIDY:csstidy/host 
+
+Package: luci-app-attendedsysupgrade
+Submenu: 3. Applications
+Version: x-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread +luci-base +uhttpd-mod-ubus +attendedsysupgrade-common +cgi-io
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: LuCI support for attended sysupgrades
+Maintainer: 
+Source: 
+Type: ipkg
+Description: LuCI support for attended sysupgrades
+
+@@
+
+Package: luci-i18n-attendedsysupgrade-es
+Default: LUCI_LANG_es||(ALL&&m)
+Version: x-1
+Depends: +libc +GCC_LIBSSP:libssp +USE_GLIBC:librt +USE_GLIBC:libpthread luci-app-attendedsysupgrade
+Conflicts: 
+Menu-Depends: 
+Provides: 
+Section: luci
+Category: LuCI
+Repository: base
+Title: luci-app-attendedsysupgrade - es translation
+Maintainer: 
+Source: 
+Type: ipkg
+Hidden: 1
+Description:     Translation for luci-app-attendedsysupgrade - Español (Spanish)
+
+@@
+
+
