@@ -1,7 +1,8 @@
 *.o
 .DS_Store
 .*.swp
-/env
+/env/.config
+/env/files
 /dl
 /.config
 /.config.old
