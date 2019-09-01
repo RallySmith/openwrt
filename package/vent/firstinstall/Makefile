@@ -8,8 +8,8 @@ PKG_RELEASE:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/firstinstall
-  SECTION:=utils
-  CATEGORY:=Utilities
+  SECTION:=vent
+  CATEGORY:=VisibleEnergyNTOP
   TITLE:=Tool to automate first eMMC installation
   MAINTAINER:=James Smith <jsmith@rallysmith.co.uk>
 endef
