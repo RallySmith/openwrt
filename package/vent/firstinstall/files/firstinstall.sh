@@ -1,40 +1,22 @@
 #!/bin/sh
 
-echo "TODO: script to perform first time install"
+# This script is part of a SD (or USB) bootable system containing the
+# eMMC images (<2GB) for the Visible Energy ntop target.
 
-# TODO: Provide SD (or USB) bootable system that will contain the eMMC image (<2GB)
-# - and can re-partition the eMMC (if not already done) to 2 x 2GB partitions
-# - write the eMMC image to the next available partition
-# - set any boot configuration (if possible) to select which partition is booted
-# - - uboot-envtools
-#    root@OpenWrt:/# cat /etc/config/ubootenv
-#    config ubootenv
-#  	option dev '/dev/mtd0'
-#	option offset '0x3f0000'
-#	option envsize '0x10000'
-#	option secsize '0x10000'
-#	option numsec '1'
-# - - use "uci show" to see settings
-# - - In /usr/sbin
-#	root@OpenWrt:/# ls -l /usr/sbin/fw_*
-#	-rwxr-xr-x    1 root     root         25379 Aug 21 12:59 /usr/sbin/fw_printenv
-#	lrwxrwxrwx    1 root     root            11 Aug 21 12:59 /usr/sbin/fw_setenv -> fw_printenv
-# - - - fw_printenv fdt_name
-# - - - fw_setenv testvar somevalue
+# TODO:EXTEND: At the moment this script is simplistic in just
+# installing the boot and root to explicit partitions. We need to
+# extend the script to be used for early development updates (until we
+# have a working OTA solution) so allow installation to the
+# alternative partition and boot from them. We need a mechanism to
+# identify the active boot/root world though.
 
-# TODO: We need an installer script to:
-# 1) If eMMC NOT our partition format then copy eMMC onto SDcard for backup
-# 2) Re-partition eMMC to our format
+# If eMMC NOT our partition format then copy eMMC onto SDcard for
+# backup and re-partition eMMC to our partition scheme.
 #      16MB boot0
 #      16MB boot1
 #      512MB root0
 #      512MB root1
-#      3040MB user? (just under due to partition table)
-# 3) Copy the relevant partition images to the eMMC
-# 4) Update U-Boot config to boot from first eMMC partition (boot0 and root0)
-
-# /usr/sbin/partx -P /dev/mmcblk0
-# /usr/sbin/partx -P -n 1 /dev/mmcblk0
+#      2.7G for future user state
 
 # We expect mmcblk0 from the factory to be:
 # NR START     END SECTORS SIZE NAME UUID
@@ -55,12 +37,49 @@ if [ $SIZEP1 == "3.7G" ]; then
  /usr/sbin/partx -s /dev/mmcblk0
 fi
 
-echo "TODO: Copy BOOT partition to /dev/mmcblk0p1"
+IMGFILE=/root/emmc-ext4.img
+# $ partx -s emmc-ext4.img
+# NR START     END SECTORS   SIZE NAME UUID
+#  1  2048   35327   33280  16.3M      15673648-01
+#  2 36864 1085951 1049088 512.3M      15673648-02
 
-echo "TODO: Copy ROOT partition to /dev/mmcblk0p5"
+# TODO: Add code to validate image matches partition sizes we expect
 
-echo "TODO: Update U-Boot env to boot from /dev/mmcblk0p1 with root on /dev/mmcblk0p5"
-#setenv bootcmd 'mmc dev 1; ext4load mmc 1:1 $kernel_addr $image_name; ext4load mmc 1:1 $fdt_addr $fdt_name; setenv bootargs $console root=PARTUUID=15672461-05 rw rootwait net.ifnames=0 biosdevname=0; booti $kernel_addr - $fdt_addr'
-#saveenv
+# TODO: Write the eMMC images to the next available partition set. So
+# we toggle between the partitions used every time.
+
+# Copy the relevant partition images to the eMMC
+echo "Copying BOOT partition ..."
+dd if=$IMGFILE of=/dev/mmcblk0p1 bs=512 skip=2048 count=33280
+
+echo "Copying ROOT partition ..."
+dd if=$IMGFILE of=/dev/mmcblk0p5 bs=512 skip=36864 count=1049088
+
+# Update U-Boot config to boot from first eMMC partition (boot0 and
+# root0)
+
+# set any boot configuration (if possible) to select which partition is booted
+# - uboot-envtools
+#    root@OpenWrt:/# cat /etc/config/ubootenv
+#    config ubootenv
+#  	option dev '/dev/mtd0'
+#	option offset '0x3f0000'
+#	option envsize '0x10000'
+#	option secsize '0x10000'
+#	option numsec '1'
+# - use "uci show" to see settings
+# - In /usr/sbin
+#	root@OpenWrt:/# ls -l /usr/sbin/fw_*
+#	-rwxr-xr-x    1 root     root         25379 Aug 21 12:59 /usr/sbin/fw_printenv
+#	lrwxrwxrwx    1 root     root            11 Aug 21 12:59 /usr/sbin/fw_setenv -> fw_printenv
+# - - fw_printenv fdt_name
+# - - fw_setenv testvar somevalue
+
+echo "Updating U-Boot env to boot from /dev/mmcblk0p1 with root on /dev/mmcblk0p5"
+
+fw_setenv bootcmd 'mmc dev 1; ext4load mmc 1:1 $kernel_addr $image_name; ext4load mmc 1:1 $fdt_addr $fdt_name; setenv bootargs $console root=PARTUUID=15672461-05 rw rootwait net.ifnames=0 biosdevname=0; booti $kernel_addr - $fdt_addr'
+
+echo "Re-booting ..."
+reboot
 
 exit 0
