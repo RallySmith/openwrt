@@ -1,0 +1,11 @@
+label: dos
+label-id: 0x15672461
+device: mmcblk0
+unit: sectors
+
+1 : start=        2048, size=       33280, type=83, bootable
+2 : start=       36864, size=       33280, type=83, bootable
+3 : start=       71680, size=     7661568, type=5
+5 : start=       73728, size=     1049089, type=83
+6 : start=     1126400, size=     1049089, type=83
+7 : start=     2179072, size=     5554176, type=83
