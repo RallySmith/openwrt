@@ -55,28 +55,10 @@ dd if=$IMGFILE of=/dev/mmcblk0p1 bs=512 skip=2048 count=33280
 echo "Copying ROOT partition ..."
 dd if=$IMGFILE of=/dev/mmcblk0p5 bs=512 skip=36864 count=1049088
 
-# Update U-Boot config to boot from first eMMC partition (boot0 and
-# root0)
-
-# set any boot configuration (if possible) to select which partition is booted
-# - uboot-envtools
-#    root@OpenWrt:/# cat /etc/config/ubootenv
-#    config ubootenv
-#  	option dev '/dev/mtd0'
-#	option offset '0x3f0000'
-#	option envsize '0x10000'
-#	option secsize '0x10000'
-#	option numsec '1'
-# - use "uci show" to see settings
-# - In /usr/sbin
-#	root@OpenWrt:/# ls -l /usr/sbin/fw_*
-#	-rwxr-xr-x    1 root     root         25379 Aug 21 12:59 /usr/sbin/fw_printenv
-#	lrwxrwxrwx    1 root     root            11 Aug 21 12:59 /usr/sbin/fw_setenv -> fw_printenv
-# - - fw_printenv fdt_name
-# - - fw_setenv testvar somevalue
-
 echo "Updating U-Boot env to boot from /dev/mmcblk0p1 with root on /dev/mmcblk0p5"
 
+fw_setenv image_name 'Image'
+fw_setenv fdt_name 'armada-3720-espressobin-v7-emmc.dtb'
 fw_setenv bootcmd 'mmc dev 1; ext4load mmc 1:1 $kernel_addr $image_name; ext4load mmc 1:1 $fdt_addr $fdt_name; setenv bootargs $console root=PARTUUID=15672461-05 rw rootwait net.ifnames=0 biosdevname=0; booti $kernel_addr - $fdt_addr'
 
 echo "Re-booting ..."
